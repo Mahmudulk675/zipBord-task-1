@@ -1,32 +1,41 @@
 import { Meteor } from "meteor/meteor";
 import React, { useState } from "react";
 
-const LoginForm = () => {
+const LoginForm = ({ setAuth, auth }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   // const submit = (e) => {
   //   e.preventDefault();
 
-  //   Meteor.loginWithPassword(username, password);
+  //   Meteor.loginWithPassword(
+  //     {
+  //       username: username,
+  //     },
+  //     password,
+  //     function (error) {
+  //       console.log(error.reason);
+  //     }
+  //   );
   // };
 
   function handleLogin(e) {
     e.preventDefault();
-    Meteor.loginWithPassword(username, password, (error) => {
+    Meteor.loginWithPassword({ username: username }, password, (error) => {
       if (error) {
-        console.log(error);
+        alert(error.message);
       } else {
         props.setLoggingIn(Meteor.loggingIn());
         window.location.replace("/");
       }
+      setUsername("");
+      setPassword("");
     });
   }
-  console.log(username, password);
 
   return (
     <div>
-      <form onSubmit={handleLogin}>
+      <form>
         <div className="form-group">
           <label for="exampleInputEmail1">Email address</label>
           <input
@@ -34,11 +43,11 @@ const LoginForm = () => {
             value={username}
             className="form-control"
             id="exampleInputEmail1"
-            aria-describedby="usernameHelp"
+            aria-describedby="emailHelp"
             placeholder="Enter username"
-            name="username"
+            name="email"
             required
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={(e) => setUsername(e.target.value.toString())}
           />
         </div>
         <div className="form-group">
@@ -52,9 +61,17 @@ const LoginForm = () => {
             placeholder="Password"
           />
         </div>
-        <button className="btn btn-success" type="submit">
+        <button
+          className="btn btn-success"
+          type="submit"
+          onClick={(e) => handleLogin(e)}
+        >
           Log In
         </button>
+        <span> Create a new account?</span>{" "}
+        <span style={{ color: "red" }} onClick={() => setAuth(!auth)}>
+          SignUp
+        </span>
       </form>
     </div>
   );

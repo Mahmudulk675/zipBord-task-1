@@ -5,8 +5,7 @@ import { useTracker } from "meteor/react-meteor-data";
 import Comment from "./Comment.jsx";
 import CommentForm from "./CommentForm.jsx";
 import { CommentsCollection } from "../api/CommentsCollection.js";
-import LoginForm from "./LoginForm.jsx";
-import SignUp from "./SignUp.jsx";
+import Auth from "./Auth.jsx";
 
 const toggleChecked = ({ _id, isChecked }) => {
   Meteor.call("comments.setIsChecked", _id, !isChecked);
@@ -16,7 +15,7 @@ const deleteTask = ({ _id }) => Meteor.call("comments.remove", _id);
 
 export const App = () => {
   const user = useTracker(() => Meteor.user());
-  const [hideCompleted, setHideCompleted] = useState(false);
+  // const [hideCompleted, setHideCompleted] = useState(false);
   const hideCompletedFilter = { isChecked: { $ne: true } };
   const userFilter = user ? { userId: user._id } : {};
   const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
@@ -47,7 +46,6 @@ export const App = () => {
     pendingCommentsCount ? ` (${pendingCommentsCount})` : ""
   }`;
 
-  // console.log("dk", pendingCommentsCount);
   return (
     <div className="app">
       <header>
@@ -56,22 +54,24 @@ export const App = () => {
             <h1 className="app-title">Welcome discussion board!</h1>
             {pendingCommentsTitle}
           </div>
+          {user ? (
+            <div className="user" onClick={logout}>
+              {user.username} 🚪 Logout
+            </div>
+          ) : null}
         </div>
       </header>
 
       <div className="main">
         {user ? (
           <Fragment>
-            <div className="user" onClick={logout}>
-              {user.username} 🚪 Logout
-            </div>
             <CommentForm user={user} />
 
-            <div className="filter">
+            {/* <div className="filter">
               <button onClick={() => setHideCompleted(!hideCompleted)}>
                 {hideCompleted ? "Show All" : "Hide Completed"}
               </button>
-            </div>
+            </div> */}
 
             <ul className="comments">
               {comments.map((c) => (
@@ -85,7 +85,7 @@ export const App = () => {
             </ul>
           </Fragment>
         ) : (
-          <SignUp />
+          <Auth />
         )}
       </div>
     </div>

@@ -23,7 +23,7 @@ Meteor.startup(() => {
   }
   const user = Accounts.findUserByUsername(username);
   if (CommentsCollection.find().count() === 0) {
-    ["1 Task", "2 Task", "3 Task"].forEach((comment) =>
+    ["1st Comment", "2nd Comment", "3rd Comment"].forEach((comment) =>
       insertComment(comment, user)
     );
   }

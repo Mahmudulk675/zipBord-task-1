@@ -99,7 +99,9 @@ header {
 .comment-form > button {
   min-width: 100px;
   height: 95%;
-  background-color: #315481;
+  background-color: #33b33e;
+  border-radius: 4px;
+  outline: none;
 }
 
 .comments {
@@ -126,7 +128,8 @@ header {
 
 .comment-btn {
   justify-self: flex-end;
-  background-color: #ff3046;
+  border-radius: 4px;
+  /* background-color: #ff3046; */
 }
 
 .filter {
