@@ -2,6 +2,7 @@ import { Meteor } from "meteor/meteor";
 import { Accounts } from "meteor/accounts-base";
 import { CommentsCollection } from "../imports/api/CommentsCollection";
 import "/imports/api/CommentsMethods";
+import "/imports/api/CommentsPublications";
 
 const insertComment = (comment, user) =>
   CommentsCollection.insert({

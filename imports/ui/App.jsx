@@ -11,40 +11,46 @@ const toggleChecked = ({ _id, isChecked }) => {
   Meteor.call("comments.setIsChecked", _id, !isChecked);
 };
 
-const deleteTask = ({ _id }) => Meteor.call("comments.remove", _id);
+const deleteComment = ({ _id }) => Meteor.call("comments.remove", _id);
 
 export const App = () => {
   const user = useTracker(() => Meteor.user());
-  // const [hideCompleted, setHideCompleted] = useState(false);
+  const [hideCompleted, setHideCompleted] = useState(false);
   const hideCompletedFilter = { isChecked: { $ne: true } };
-  const userFilter = user ? { userId: user._id } : {};
+  const userFilter = user ? {} : {};
   const pendingOnlyFilter = { ...hideCompletedFilter, ...userFilter };
   const logout = () => Meteor.logout();
 
-  const comments = useTracker(() => {
-    if (!user) {
-      return [];
+  /////  func
+
+  const { comments, pendingCommentsCount, isLoading } = useTracker(() => {
+    const noDataAvailable = { comments: [], pendingCommentsCount: 0 };
+    if (!Meteor.user()) {
+      return noDataAvailable;
+    }
+    const handler = Meteor.subscribe("comments");
+
+    if (!handler.ready()) {
+      return { ...noDataAvailable, isLoading: true };
     }
 
-    return CommentsCollection.find(
-      pendingOnlyFilter ? hideCompletedFilter : {},
+    const comments = CommentsCollection.find(
+      hideCompleted ? pendingOnlyFilter : userFilter,
       {
         sort: { createdAt: -1 },
       }
     ).fetch();
-  });
+    const pendingCommentsCount =
+      CommentsCollection.find(pendingOnlyFilter).count();
 
-  const pendingCommentsCount = useTracker(() => {
-    if (!user) {
-      return 0;
-    }
-
-    return CommentsCollection.find(hideCompletedFilter).count();
+    return { comments, pendingCommentsCount };
   });
 
   const pendingCommentsTitle = `${
     pendingCommentsCount ? ` (${pendingCommentsCount})` : ""
   }`;
+
+  // ///////////
 
   return (
     <div className="app">
@@ -67,11 +73,13 @@ export const App = () => {
           <Fragment>
             <CommentForm user={user} />
 
-            {/* <div className="filter">
+            <div className="filter">
               <button onClick={() => setHideCompleted(!hideCompleted)}>
-                {hideCompleted ? "Show All" : "Hide Completed"}
+                {hideCompleted ? "See all comments" : "Hide comments"}
               </button>
-            </div> */}
+            </div>
+
+            {isLoading && <div className="loading">loading...</div>}
 
             <ul className="comments">
               {comments.map((c) => (
@@ -79,7 +87,7 @@ export const App = () => {
                   key={c._id}
                   c={c}
                   onCheckboxClick={toggleChecked}
-                  onDeleteClick={deleteTask}
+                  onDeleteClick={deleteComment}
                 />
               ))}
             </ul>

@@ -2,6 +2,24 @@ import { check } from "meteor/check";
 import { CommentsCollection } from "./CommentsCollection";
 import { useTracker } from "meteor/react-meteor-data";
 
+// if (Meteor.isServer) {
+//   describe("Tasks", () => {
+//     describe("methods", () => {
+//       const userId = Random.id();
+//       let taskId;
+
+//       beforeEach(() => {
+//         TasksCollection.remove({});
+//         taskId = TasksCollection.insert({
+//           text: "Test Task",
+//           createdAt: new Date(),
+//           userId,
+//         });
+//       });
+//     });
+//   });
+// }
+
 Meteor.methods({
   "comments.insert"(comment) {
     check(comment, String);

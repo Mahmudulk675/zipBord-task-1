@@ -15,7 +15,7 @@ body {
 
   font-size: 14px;
 }
-/* button {
+button {
   font-weight: bold;
   font-size: 1em;
   border: none;
@@ -23,7 +23,7 @@ body {
   box-shadow: 0 3px 3px rgba(34, 25, 25, 0.4);
   padding: 5px;
   cursor: pointer;
-} */
+}
 
 button:focus {
   outline: 0;
@@ -124,6 +124,7 @@ header {
 
 .comment-text {
   flex-grow: 1;
+  margin-left: 10px;
 }
 
 .comment-btn {
@@ -186,4 +187,15 @@ header {
 
 .login-form > div > button {
   background-color: #62807e;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
 }

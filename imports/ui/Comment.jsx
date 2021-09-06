@@ -16,6 +16,12 @@ const Comment = ({ c, onCheckboxClick, onDeleteClick }) => {
     <>
       {c.comment ? (
         <li className="comments-list">
+          <input
+            type="checkbox"
+            checked={!!c.isChecked}
+            onClick={() => onCheckboxClick(c)}
+            readOnly
+          />
           <div className="comment-text">
             <span className="comment-text">{c.comment}</span>
           </div>
@@ -34,7 +40,7 @@ const Comment = ({ c, onCheckboxClick, onDeleteClick }) => {
           </span>
           <button
             className="comment-btn btn-danger"
-            onClick={() => deleteComment()}
+            onClick={() => deleteComment(c)}
           >
             &times;
           </button>
